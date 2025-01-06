@@ -2,6 +2,11 @@ Add-Type -AssemblyName System.Windows.Forms
 
 #CONSTANTS
 
+$global:MONITORXOFFSET = 1920
+$global:MONITORYOFFSET = 1080
+#Works horizontally atm
+$global:MONITOR = 0
+
 $global:WORLDONE = @{
     'size' = 27
     1 = 'Blunder Hills'
@@ -154,6 +159,21 @@ $global:GUIELEMENTS = @{
     "players" = @(1660, 980)
     "cloudsave" = @(640, 170)
     "menu" = @(1750, 980)
+    "map" = @(1520, 980)
+    "claim" = @(1140, 560)
+}
+
+$global:WORLDS = @{
+    1 = @(125, 425)
+    2 = @(125, 375)
+    3 = @(125, 325)
+    4 = @(125, 275)
+    5 = @(125, 225)
+    6 = @(125, 175)
+}
+
+$global:MAP = @{
+
 }
 
 #GLOBALS
@@ -207,26 +227,31 @@ function Show-StartupAnimation {
 #HELPERS ##################################################################################################################
 
 function Reset-Screen {
-    Clear-Host
+    # Clear-Host
 
-    $colors = @(
-        "Red", "Yellow", "Green", "Cyan", "Blue", "Magenta"
-    )
+    # $colors = @(
+    #     "Red", "Yellow", "Green", "Cyan", "Blue", "Magenta"
+    # )
 
-    $lines = $global:asciiArt -split "`n"
+    # $lines = $global:asciiArt -split "`n"
 
-    foreach ($line in $lines) {
-        $color = $colors[(Get-Random -Minimum 0 -Maximum $colors.Count)]
-        Write-Host $line -ForegroundColor $color
-    }
+    # foreach ($line in $lines) {
+    #     $color = $colors[(Get-Random -Minimum 0 -Maximum $colors.Count)]
+    #     Write-Host $line -ForegroundColor $color
+    # }
 }
 
 function Click-Screen {
     param (
         [int]$x,
         [int]$y,
+        [int[]]$box = @(),
         [int]$hold = 0
     )
+
+    #TODO - Abstract to automatic monitor checking
+    $x = $x + ($global:MONITORXOFFSET * $global:MONITOR)
+    #y = $y + ($global:MONITORYOFFSET * $global:MONITOR)
 
     [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
 
@@ -236,21 +261,24 @@ function Click-Screen {
 '@
 
     Add-Type -MemberDefinition $signature -Name 'MouseEvent' -Namespace 'Win32'
+    $MOUSEEVENTF_MOVE = 0x01
     $MOUSEEVENTF_LEFTDOWN = 0x02
-    if ($hold -eq 1) {
-        Start-Sleep -Milliseconds 500
-    }
     $MOUSEEVENTF_LEFTUP = 0x04
-
-    [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-    [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    
+    if($box.length -eq 4) {
+        #drag logic
+    } else {
+        #click logic
+        [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+        Start-Sleep -Milliseconds $hold
+        [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    }
 }
 
 function Reset-Menus {
+    Click-Screen -x 1820 -y 980
     Start-Sleep -Milliseconds 150
-    Click-Screen -x $global:GUIELEMENTS["menu"][0] -y $global:GUIELEMENTS["menu"][1]
-    Start-Sleep -Milliseconds 150
-    Click-Screen -x $global:GUIELEMENTS["menu"][0] -y $global:GUIELEMENTS["menu"][1]
+    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
     Start-Sleep -Milliseconds 150
 }
 
@@ -284,11 +312,32 @@ function Select-Character {
     Start-Sleep -Milliseconds 500
 }
 
-function Collect-Screen {
-
+function Reset-Chat {
+    Start-Sleep -Milliseconds 100
+    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:GUIELEMENTS["map"][0] -y $global:GUIELEMENTS["map"][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]1][0] -y $global:WORLDS[[int]1][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]1][0] -y $global:WORLDS[[int]1][1]
+    Start-Sleep -Milliseconds 2500
+    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:GUIELEMENTS["map"][0] -y $global:GUIELEMENTS["map"][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]2][0] -y $global:WORLDS[[int]2][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]2][0] -y $global:WORLDS[[int]2][1]
+    Start-Sleep -Milliseconds 2500
+    Click-Screen -x $global:GUIELEMENTS["map"][0] -y $global:GUIELEMENTS["map"][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]3][0] -y $global:WORLDS[[int]3][1]
+    Start-Sleep -Milliseconds 100
+    Click-Screen -x $global:WORLDS[[int]3][0] -y $global:WORLDS[[int]3][1]
 }
 
-Function Reset-Chatbox {
+function Collect-Items {
     
 }
 
@@ -409,7 +458,7 @@ function Set-Level ($level) {
 function Choose-Level {
     $cp = $false
     do {
-        $levelInput = Read-Host "`nEnter the world # you want to run the idleon scripts on (1-x)"
+        $levelInput = Read-Host "`nEnter the level # you want to run the idleon scripts on (1-x)"
         if ($levelInput -match '^\d+$') {
             $levelChoice = [int]$levelInput
             $cp = Set-Level $levelChoice
@@ -462,7 +511,7 @@ function Show-SubMenu {
 
 #DEV CYCLE ##################################################################################################################
 
-function Dev-Cycle {
+function Dev {
     Write-Host "Function Starting in 5000 ms`nPlease put Idleon (Steam) Full Window on your first monitor`nPlease put your terminal on your second monitor"
     Start-Sleep -Milliseconds 5000
     Reset-Menus
@@ -470,6 +519,10 @@ function Dev-Cycle {
     Cloud-Save
     Start-Sleep -Milliseconds 100
     Select-Character
+    Start-Sleep -Milliseconds 100
+    Reset-Chat
+    Start-Sleep -Milliseconds 100
+    Collect-Items
     Start-Sleep -Milliseconds 100
 }
 
@@ -504,7 +557,7 @@ function Process-MainMenu($choice) {
             } while ($true)
         }
         12 {
-            Dev-Cycle
+            Dev
         }
         13 {
             Reset-Screen
