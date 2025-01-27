@@ -2,6 +2,8 @@ Add-Type -AssemblyName System.Windows.Forms
 
 #CONSTANTS
 
+#TODO - ADD WAY TO KILL BONEMEAL DUDES TO DAILIES
+
 $global:MONITORXOFFSET = 1920
 $global:MONITORYOFFSET = 1080
 #Works horizontally atm
@@ -172,8 +174,151 @@ $global:WORLDS = @{
     6 = @(125, 175)
 }
 
-$global:MAP = @{
+$global:WORLDONEMAP = @{
+    1 = @(1142, 375)
+    2 = @(1216, 414)
+    3 = @(1060, 450)
+    4 = @(1283, 470)
+    5 = @(1413, 500)
+    6 = @(1500, 540)
+    7 = @(1344, 564)
+    8 = @(1273, 614)
+    9 = @(1111, 683)
+    10 = @(1083, 770)
+    11 = @(1003, 425)
+    12 = @(1345, 378)
+    13 = @(1328, 338)
+    14 = @(1306, 514)
+    15 = @(1498, 443)
+    16 = @(1521, 386)
+    17 = @(1517, 301)
+    18 = @(1552, 465)
+    19 = @(1094, 323)
+    20 = @(1044, 322)
+    21 = @(1001, 302)
+    22 = @(826, 350)
+    23 = @(639, 369)
+    24 = @(716, 392)
+    25 = @(759, 448)
+    26 = @(568, 476)
+    27 = @(687, 491)
+}
 
+$global:WORLDTWOMAP = @{
+    1 = @()
+    2 = @()
+    3 = @()
+    4 = @()
+    5 = @()
+    6 = @()
+    7 = @()
+    8 = @()
+    9 = @()
+    10 = @()
+    11 = @()
+    12 = @()
+    13 = @()
+    14 = @()
+    15 = @()
+    16 = @()
+    17 = @()
+    18 = @()
+}
+
+$global:WORLDTHREEMAP = @{
+    1 = @()
+    2 = @()
+    3 = @()
+    4 = @()
+    5 = @()
+    6 = @()
+    7 = @()
+    8 = @()
+    9 = @()
+    10 = @()
+    11 = @()
+    12 = @()
+    13 = @()
+    14 = @()
+    15 = @()
+    16 = @()
+    17 = @()
+    18 = @()
+}
+
+$global:WORLDFOURMAP = @{
+    1 = @()
+    2 = @()
+    3 = @()
+    4 = @()
+    5 = @()
+    6 = @()
+    7 = @()
+    8 = @()
+    9 = @()
+    10 = @()
+    11 = @()
+    12 = @()
+    13 = @()
+    14 = @()
+    15 = @()
+}
+
+$global:WORLDFIVEMAP = @{
+    1 = @()
+    2 = @()
+    3 = @()
+    4 = @()
+    5 = @()
+    6 = @()
+    7 = @()
+    8 = @()
+    9 = @()
+    10 = @()
+    11 = @()
+    12 = @()
+    13 = @()
+    14 = @()
+    15 = @()
+}
+
+$global:WORLDSIXMAP = @{
+    1 = @()
+    2 = @()
+    3 = @()
+    4 = @()
+    5 = @()
+    6 = @()
+    7 = @()
+    8 = @()
+    9 = @()
+    10 = @()
+    11 = @()
+    12 = @()
+    13 = @()
+    14 = @()
+    15 = @()
+}
+
+$global:SHOPINTERACTION = @{
+    EZACCESS = @(900, 860)
+    QUICKBUY = @(635, 871)
+    ITEMONE = @(675, 400)
+    ITEMTWO = @(675, 520)
+    ITEMTHREE = @(675, 650)
+    ITEMFOUR = @(675, 792)
+    PLUSONE = @(1040, 342)
+    PLUSTWO = @(1040, 473)
+    PLUSTHREE = @(1040, 610)
+    PLUSFOUR = @(1040, 743)
+    1 = @(497, 774)
+    2 = @(565, 774)
+    3 = @(646, 774)
+    4 = @(718, 774)
+    5 = @(497, 850)
+    6 = @(565, 850)
+    7 = @(646, 850)
+    8 = @(718, 850)
 }
 
 #GLOBALS
@@ -556,6 +701,14 @@ function Process-MainMenu($choice) {
                 Start-Sleep -Milliseconds 75
             } while ($true)
         }
+        8 {
+            for($i = 0; $i -lt 20; $i++) {
+                Click-Screen -x 1175 -y 820
+                Start-Sleep -Milliseconds 50
+                Click-Screen -x 1520 -y 855
+                Start-Sleep -Milliseconds 50
+            }
+        }
         12 {
             Dev
         }
@@ -603,7 +756,7 @@ function MainLoop {
             "Cog Farming",
             "Breeding Exp Farming",
             "Candying Bubbles",
-            "Daily Claim",
+            "Daily Claim (Buying Shops, etc)",
             "Two Minute Archer Claims"
             "[Dev] Basic Farming"
             "Settings",
