@@ -340,15 +340,26 @@ $global:SHOPINTERACTION = @{
         @(646, 850),
         @(718, 850)
     )
-    #THESE ARE ACTUAL ITEM INDECES STARTING AT THE 5TH ITEM IN EVERY SHOP
-    "SHOP1DONTBUY" = @(8, 11, 12, 13, 14, 15, 16, 17, 18)
-    "SHOP2DONTBUY" = @(2, 3, 6, 7)
-    "SHOP3DONTBUY" = @(7, 8, 9, 10, 11, 13, 16)
-    "SHOP4DONTBUY" = @()
-    "SHOP5DONTBUY" = @(0, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18)
-    "SHOP6DONTBUY" = @(0, 8, 9, 10, 11, 12)
-    "SHOP7DONTBUY" = @(2, 3)
-    "SHOP8DONTBUY" = @(4, 5, 6, 7)
+    "SHOPSSIZES" = @(25, 14, 21, 13, 23, 17, 8, 12)
+    #THESE ARE ACTUAL ITEM INDECES IN EACH SHOP
+    "SHOPDONTBUY" = @(
+        @(12, 15, 16, 17, 18, 19, 20, 21, 22),
+        @(6, 7, 10, 11),
+        @(11, 12, 13, 14, 15, 17, 20),
+        @(0, 1, 2, 3, 4, 5, 6, 9, 10, 11),
+        @(3, 4, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22),
+        @(0, 1, 4, 12, 13, 14, 15, 16),
+        @(6, 7),
+        @(8, 9, 10, 11)
+    )
+    # "SHOP1DONTBUY" = @(8, 11, 12, 13, 14, 15, 16, 17, 18)
+    # "SHOP2DONTBUY" = @(2, 3, 6, 7)
+    # "SHOP3DONTBUY" = @(7, 8, 9, 10, 11, 13, 16)
+    # "SHOP4DONTBUY" = @()
+    # "SHOP5DONTBUY" = @(0, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18)
+    # "SHOP6DONTBUY" = @(0, 8, 9, 10, 11, 12)
+    # "SHOP7DONTBUY" = @(2, 3)
+    # "SHOP8DONTBUY" = @(4, 5, 6, 7)
 }
 
 #GLOBALS
@@ -719,218 +730,6 @@ function Show-SubMenu {
 
 
 #SHOP BUY ##################################################################################################################
-function Shop-One {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 21; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP1DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Two {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 9; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP2DONTBUY"]) {
-            continue
-        }
-        if($i -eq 5) {
-            for($j = 0; $j -lt 3; $j++) {
-                Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-                Start-Sleep -Milliseconds 250
-                Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-                Start-Sleep -Milliseconds 250
-            }
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Three {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 16; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP3DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Four {
-    
-}
-
-function Shop-Five {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 19; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP5DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Six {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 13; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP6DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Seven {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 4; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP7DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-function Shop-Eight {
-    Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-    Start-Sleep -Milliseconds 250
-    for ($i = 0; $i -lt 8; $i++) {
-        [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
-        Start-Sleep -Milliseconds 250
-        if($i -in $global:SHOPINTERACTION["SHOP8DONTBUY"]) {
-            continue
-        }
-        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
-        Start-Sleep -Milliseconds 250
-        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
-        Start-Sleep -Milliseconds 250
-    }
-}
-
-
 function Iterate-Shops {
     Click-Screen -x $global:GUIELEMENTS["codex"][0] -y $global:GUIELEMENTS["codex"][1]
     Start-Sleep -Milliseconds 250
@@ -938,8 +737,8 @@ function Iterate-Shops {
         Click-Screen -x $global:SHOPINTERACTION["EZACCESS"][0] -y $global:SHOPINTERACTION["EZACCESS"][1]
     }
     Start-Sleep -Milliseconds 250
-    for($i = 0; $i -lt $global:SHOPINTERACTION["SHOPS"].Length; $i++) {
-        Click-Screen -x $global:SHOPINTERACTION["SHOPS"][$i][0] -y $global:SHOPINTERACTION["SHOPS"][$i][1]
+    for($shop = 0; $shop -lt $global:SHOPINTERACTION["SHOPS"].Length; $shop++) {
+        Click-Screen -x $global:SHOPINTERACTION["SHOPS"][$shop][0] -y $global:SHOPINTERACTION["SHOPS"][$shop][1]
         Start-Sleep -Milliseconds 300
         #COMMENT THIS FOR TESTING THE SHOP PURCHASING
         if(Check-Pixel -x $global:SHOPINTERACTION["QUICKBUYCHECK"][0] -y $global:SHOPINTERACTION["QUICKBUYCHECK"][1] -r 169 -b 169 -g 169) {
@@ -947,30 +746,65 @@ function Iterate-Shops {
             Start-Sleep -Milliseconds 250
         }
         Start-Sleep -Milliseconds 250
-        switch($i) {
-            0 {
-                Shop-One
+        for($item = 0; $item -lt $global:SHOPINTERACTION["SHOPSSIZES"][$shop]; $item++) {
+            Write-Host $shop + $item
+            # #REALIZATION! -> SCROLLING ALWAYS EVEN IF SKIP IS IN FIRST FOUR, FIX!
+            # if($item -in $global:SHOPINTERACTION["SHOPDONTBUY"][$shop]) {
+            #     [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+            #     Write-Host "skipped"
+            #     Start-Sleep -Milliseconds 250
+            # }
+
+            if($item -in $global:SHOPINTERACTION["SHOPDONTBUY"][$shop]) {
+                if($item -gt 3) {
+                    [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+                    Start-Sleep -Milliseconds 250
+                }
+                continue
             }
-            1 {
-                Shop-Two
-            }
-            2 {
-                Shop-Three
-            }
-            3{
-                Shop-Four
-            }
-            4 {
-                Shop-Five
-            }
-            5 {
-                Shop-Six
-            }
-            6 {
-                Shop-Seven
-            }
-            7 {
-                Shop-Eight
+            elseif($item -lt 4) {
+                switch($item) {
+                    0 {
+                        Click-Screen -x $global:SHOPINTERACTION["PLUSONE"][0] -y $global:SHOPINTERACTION["PLUSONE"][1]
+                        Start-Sleep -Milliseconds 250
+                        Click-Screen -x $global:SHOPINTERACTION["ITEMONE"][0] -y $global:SHOPINTERACTION["ITEMONE"][1]
+                        Start-Sleep -Milliseconds 250
+                    }
+                    1 {
+                        Click-Screen -x $global:SHOPINTERACTION["PLUSTWO"][0] -y $global:SHOPINTERACTION["PLUSTWO"][1]
+                        Start-Sleep -Milliseconds 250
+                        Click-Screen -x $global:SHOPINTERACTION["ITEMTWO"][0] -y $global:SHOPINTERACTION["ITEMTWO"][1]
+                        Start-Sleep -Milliseconds 250
+                    }
+                    2 {
+                        Click-Screen -x $global:SHOPINTERACTION["PLUSTHREE"][0] -y $global:SHOPINTERACTION["PLUSTHREE"][1]
+                        Start-Sleep -Milliseconds 250
+                        Click-Screen -x $global:SHOPINTERACTION["ITEMTHREE"][0] -y $global:SHOPINTERACTION["ITEMTHREE"][1]
+                        Start-Sleep -Milliseconds 250
+                    }
+                    3 {
+                        Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
+                        Start-Sleep -Milliseconds 250
+                        Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
+                        Start-Sleep -Milliseconds 250
+                    }
+                }
+            } else {
+                [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+                Start-Sleep -Milliseconds 250
+                if($shop -eq 1 -and $item -eq 9) {
+                    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
+                    Start-Sleep -Milliseconds 250
+                    continue
+                }
+                Click-Screen -x $global:SHOPINTERACTION["PLUSFOUR"][0] -y $global:SHOPINTERACTION["PLUSFOUR"][1]
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
+                Start-Sleep -Milliseconds 250
             }
         }
         Deposit-Inventory
