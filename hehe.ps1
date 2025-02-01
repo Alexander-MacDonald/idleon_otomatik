@@ -5,12 +5,17 @@ Add-Type @"
 using System;
 using System.Runtime.InteropServices;
 
-public class MouseControl {
+public class MouseController {
     [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
     public static extern void mouse_event(uint dwFlags, uint dx, uint dy, int cButtons, uint dwExtraInfo);
 
+    [DllImport("user32.dll")]
+    public static extern bool SetCursorPos(int X, int Y);
+
     public const int MOUSEEVENTF_WHEEL = 0x0800;
     public const int WHEEL_DELTA = 120;
+    public const int MOUSEEVENTF_LEFTDOWN = 0x0002;
+    public const int MOUSEEVENTF_LEFTUP = 0x0004;
 }
 "@
 
@@ -18,10 +23,22 @@ public class MouseControl {
 
 #TODO - ADD WAY TO KILL BONEMEAL DUDES TO DAILIES
 
+$global:TESSERACTPATH = "E:\Tesseract\tesseract.exe"
+
 $global:MONITORXOFFSET = 1920
 $global:MONITORYOFFSET = 1080
 #Works horizontally atm
 $global:MONITOR = 0
+
+$global:DEFAULTCONFIG = @(
+    @{
+        daily = @{
+            buyShops = 1;
+            claimKeys = 1;
+
+        } 
+    }
+)
 
 $global:WORLDONE = @{
     'size' = 27
@@ -178,6 +195,7 @@ $global:GUIELEMENTS = @{
     "map" = @(1520, 980)
     "claim" = @(1140, 560)
     "codex" = @(1400, 980)
+    "quickref" = @(1180, 232)
     "storage" = @(1111, 370)
     "depositall" = @(228, 385)
 }
@@ -427,11 +445,14 @@ function Reset-Screen {
     # }
 }
 
+function Generate-Config {
+    
+}
+
 function Click-Screen {
     param (
         [int]$x,
         [int]$y,
-        [int[]]$box = @(),
         [int]$hold = 0
     )
 
@@ -441,24 +462,33 @@ function Click-Screen {
 
     [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
 
-    $signature = @'
-    [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-    public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
-'@
+    #click logic
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+    Start-Sleep -Milliseconds $hold
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
-    Add-Type -MemberDefinition $signature -Name 'MouseEvent' -Namespace 'Win32'
-    $MOUSEEVENTF_MOVE = 0x01
-    $MOUSEEVENTF_LEFTDOWN = 0x02
-    $MOUSEEVENTF_LEFTUP = 0x04
-    
-    if($box.length -eq 4) {
-        #drag logic
-    } else {
-        #click logic
-        [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-        Start-Sleep -Milliseconds $hold
-        [Win32.MouseEvent]::mouse_event($MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+}
+
+function Click-Drag {
+    param(
+        [int]$c1,
+        [int]$c2,
+        [int]$c3,
+        [int]$c4,
+        [int]$step
+    )
+
+    [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($global:GUIELEMENTS["menu"][0], $global:GUIELEMENTS["menu"][1])
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+    Start-Sleep -Milliseconds 500
+    for($x = $c1; $x -lt $c3; $x += $step) {
+        for($y = $c2; $y -lt $c4; $y += $step) {
+            [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
+            Start-Sleep -Milliseconds 1
+        }
     }
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    Start-Sleep -Milliseconds 50
 }
 
 function Check-Pixel {
@@ -547,7 +577,7 @@ function Reset-Chat {
 }
 
 function Collect-Items {
-    
+    Click-Drag -c1 75 -c2 142 -c3 1842 -c4 889 -step 50
 }
 
 function Deposit-Inventory {
@@ -733,6 +763,8 @@ function Show-SubMenu {
 function Iterate-Shops {
     Click-Screen -x $global:GUIELEMENTS["codex"][0] -y $global:GUIELEMENTS["codex"][1]
     Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
+    Start-Sleep -Milliseconds 250
     if(-not (Check-Pixel -x $global:SHOPINTERACTION["EZACCESSCHECK"][0] -y $global:SHOPINTERACTION["EZACCESSCHECK"][1] -r 112 -b 112 -g 112)) {
         Click-Screen -x $global:SHOPINTERACTION["EZACCESS"][0] -y $global:SHOPINTERACTION["EZACCESS"][1]
     }
@@ -747,17 +779,17 @@ function Iterate-Shops {
         }
         Start-Sleep -Milliseconds 250
         for($item = 0; $item -lt $global:SHOPINTERACTION["SHOPSSIZES"][$shop]; $item++) {
-            Write-Host $shop + $item
+            #Write-Host $shop + $item
             # #REALIZATION! -> SCROLLING ALWAYS EVEN IF SKIP IS IN FIRST FOUR, FIX!
             # if($item -in $global:SHOPINTERACTION["SHOPDONTBUY"][$shop]) {
-            #     [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+            #     [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
             #     Write-Host "skipped"
             #     Start-Sleep -Milliseconds 250
             # }
 
             if($item -in $global:SHOPINTERACTION["SHOPDONTBUY"][$shop]) {
                 if($item -gt 3) {
-                    [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+                    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
                     Start-Sleep -Milliseconds 250
                 }
                 continue
@@ -790,7 +822,7 @@ function Iterate-Shops {
                     }
                 }
             } else {
-                [MouseControl]::mouse_event([MouseControl]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseControl]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
                 Start-Sleep -Milliseconds 250
                 if($shop -eq 1 -and $item -eq 9) {
                     Click-Screen -x $global:SHOPINTERACTION["ITEMFOUR"][0] -y $global:SHOPINTERACTION["ITEMFOUR"][1]
@@ -815,6 +847,43 @@ function Iterate-Shops {
     Reset-Menus
 }
 
+#COG FARMING ######################################################################################################################
+
+function Cog-Farming {
+    #Ask for Buffer
+    #Reset Menus
+    #Open Codex
+    #Open Construction
+    #Open Cogs
+    #Check for white pixel in P for (EXP), if not, click the eye
+    #Open Cog Shelf
+    #do while goodCogs < len(buffer2)
+        #Click Ultimate Cog Collect 120-len(buffer2) Times
+        #Click Left Page Arrow 9 Times
+        #For Each Cog Page (8)
+            #Take ScreenShot of Cog Page
+                #Iterate through each cog, do OCR
+                    #if cog is already good -> skip
+                    #else
+                        #if Cog > Buffer -> Make note if it to skip (array of arrays or something)
+                        #else -> delete cog
+    $bitmap = New-Object System.Drawing.Bitmap 264, 448
+    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $graphics.CopyFromScreen(65, 173, 0, 0, $bitmap.Size)
+    $bitmap.Save(".\ocr_image.png", [System.Drawing.Imaging.ImageFormat]::Png)
+    $graphics.Dispose()
+    $bitmap.Dispose()
+
+    $ocrOutput = python ".\ocr.py" ".\ocr_image.png" | ConvertFrom-Json
+
+    if($ocrOutput.error) {
+        Write-Host "OCR ERROR"
+    } else {
+        Write-Host $ocrOutput.digits
+    }
+
+}
+
 #DEV CYCLE ##################################################################################################################
 
 function Dev {
@@ -826,9 +895,9 @@ function Dev {
     Start-Sleep -Milliseconds 100
     Select-Character
     Start-Sleep -Milliseconds 100
-    Reset-Chat
-    Start-Sleep -Milliseconds 100
     Collect-Items
+    Start-Sleep -Milliseconds 100
+    Reset-Chat
     Start-Sleep -Milliseconds 100
 }
 
@@ -862,6 +931,9 @@ function Process-MainMenu($choice) {
                 Start-Sleep -Milliseconds 75
             } while ($true)
         }
+        7 {
+            Cog-Farming
+        }
         8 {
             for($i = 0; $i -lt 20; $i++) {
                 Click-Screen -x 1175 -y 820
@@ -893,6 +965,9 @@ function Process-MainMenu($choice) {
 #MAIN LOOP########################################################################################################################
 
 function MainLoop {
+
+    Generate-Config
+
     do {
         Reset-Screen
         $checkPoint = Choose-Character
