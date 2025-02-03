@@ -847,6 +847,31 @@ function Iterate-Shops {
     Reset-Menus
 }
 
+#GEM FARMING ######################################################################################################################
+function Gem-Farming {
+    Reset-Menus
+    #First Teleport
+    Click-Screen -x 155 -y 760
+    Start-Sleep -Milliseconds 2500
+    Click-Screen -x 860 -y 300
+    Start-Sleep -Milliseconds 3250
+    Click-Screen -x 1300 -y 550
+    Start-Sleep -Milliseconds 11000
+    Click-Screen -x 370 -y 777
+    Start-Sleep -Milliseconds 2750
+    for($i = 0; $i -lt 2500; $i++) {
+        Write-Host $i
+        Click-Screen -x 700 -y 500
+        Start-Sleep -Milliseconds 750
+        Click-Screen -x 860 -y 300
+        Start-Sleep -Milliseconds 3250
+        Click-Screen -x 1200 -y 550
+        Start-Sleep -Milliseconds 11000
+        Click-Screen -x 450 -y 800
+        Start-Sleep -Milliseconds 2750
+    }
+}
+
 #COG FARMING ######################################################################################################################
 
 function Cog-Farming {
@@ -924,12 +949,8 @@ function Process-MainMenu($choice) {
             Show-SubMenu
         }
         5 {
-            do {
-                Reset-Screen
-                Write-Host "Press Ctrl+C in the terminal to stop at any time"
-                Write-Host "omg hiii"
-                Start-Sleep -Milliseconds 75
-            } while ($true)
+            Write-Host "This Function only implemented for gem farming W5 boss, more functionality soon TM"
+            Gem-Farming
         }
         7 {
             Cog-Farming
