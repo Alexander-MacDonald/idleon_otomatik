@@ -197,6 +197,14 @@ $global:GUIELEMENTS = @{
     "codex" = @(1400, 980)
     "quickref" = @(1180, 232)
     "storage" = @(1111, 370)
+    "construction" = @(1518, 558)
+    "cogs" = @(308, 105)
+    "constructionEXP" = @(771, 72) #247 250 255
+    "cogShelf" = @(682, 110) #230 165 107
+    "ultimateCog" = @(606, 756)
+    "cogLeftArrow" = @(98, 623)
+    "cogRightArrow" = @(293, 623)
+    "deleteCog" = @(1317, 107)
     "depositall" = @(228, 385)
 }
 
@@ -380,6 +388,24 @@ $global:SHOPINTERACTION = @{
     # "SHOP8DONTBUY" = @(4, 5, 6, 7)
 }
 
+$global:COGS = @(
+    @(109, 215),
+    @(195, 215),
+    @(283, 215),
+    @(109, 300),
+    @(195, 300),
+    @(283, 300),
+    @(109, 385),
+    @(195, 385),
+    @(283, 385),
+    @(109, 480),
+    @(195, 480),
+    @(283, 480),
+    @(109, 564),
+    @(195, 564),
+    @(283, 564)
+)
+
 #GLOBALS
 
 $global:activeCharacter = 0
@@ -508,6 +534,8 @@ function Check-Pixel {
     $graphics.Dispose()
     $bitmap.Dispose()
     Write-Host $color.R + $color.G + $color.B
+    Write-Host $r + $g + $b
+    Write-Host ""
     if($color.G -eq $g -and $color.R -eq $r -and $color.B -eq $b) {
         return $true
     }
@@ -873,6 +901,76 @@ function Gem-Farming {
 }
 
 #COG FARMING ######################################################################################################################
+function Cog-Functionality($buffer) {
+
+    $numTrue = 0
+
+    Reset-Menus
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["codex"][0] -y $global:GUIELEMENTS["codex"][1]
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["construction"][0] -y $global:GUIELEMENTS["construction"][1]
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["cogs"][0] -y $global:GUIELEMENTS["cogs"][1]
+    Start-Sleep -Milliseconds 250
+
+    while(-not (Check-Pixel -x $global:GUIELEMENTS["constructionEXP"][0] -y $global:GUIELEMENTS["constructionEXP"][1] -r 247 -b 255 -g 250)) {
+        Click-Screen -x $global:GUIELEMENTS["constructionEXP"][0] -y $global:GUIELEMENTS["constructionEXP"][1]
+        Start-Sleep -Milliseconds 500
+    }
+
+    while(-not (Check-Pixel -x $global:GUIELEMENTS["cogShelf"][0] -y $global:GUIELEMENTS["cogShelf"][1] -r 230 -b 107 -g 165)) {
+        Click-Screen -x $global:GUIELEMENTS["cogShelf"][0] -y $global:GUIELEMENTS["cogShelf"][1]
+        Start-Sleep -Milliseconds 500
+    }
+
+    while(-not (Check-Pixel -x $global:GUIELEMENTS["deleteCog"][0] -y $global:GUIELEMENTS["deleteCog"][1] -r 230 -b 107 -g 165)) {
+        Click-Screen -x $global:GUIELEMENTS["deleteCog"][0] -y $global:GUIELEMENTS["deleteCog"][1]
+        Start-Sleep -Milliseconds 500
+    }
+
+    for($i = 0; $i -lt (120 - $numTrue); $i++) {
+        Click-Screen -x $global:GUIELEMENTS["ultimateCog"][0] -y $global:GUIELEMENTS["ultimateCog"][1]
+        Start-Sleep -Milliseconds 250
+    }
+
+    for($j = 0; $j -lt 9; $j++) {
+        Click-Screen -x $global:GUIELEMENTS["cogLeftArrow"][0] -y $global:GUIELEMENTS["cogLeftArrow"][1]
+        Start-Sleep -Milliseconds 250
+    }
+
+    for($k = 0; $k -lt 8; $k++) {
+        $bitmap = New-Object System.Drawing.Bitmap 264, 448
+        $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+        $graphics.CopyFromScreen(65, 173, 0, 0, $bitmap.Size)
+        $bitmap.Save(".\ocr_image.png", [System.Drawing.Imaging.ImageFormat]::Png)
+        $graphics.Dispose()
+        $bitmap.Dispose()
+
+        $ocrOutput = python ".\ocr.py" ".\ocr_image.png" | ConvertFrom-Json
+
+        if($ocrOutput.error) {
+            Write-Host "OCR ERROR"
+            Click-Screen -x $global:GUIELEMENTS["cogRightArrow"][0] -y $global:GUIELEMENTS["cogRightArrow"][1]
+            Start-Sleep -Milliseconds 250
+        } else {
+            $index = 0
+            foreach($cog in $ocrOutput.digits) {
+                Write-Host $cog
+                if([int]$cog -lt $buffer) {
+                    Click-Screen -x $global:COGS[$index][0] -y $global:COGS[$index][1]
+                    Start-Sleep -Milliseconds 250
+                } else {
+                    $numTrue++;
+                }
+                $index++
+            }
+            Click-Screen -x $global:GUIELEMENTS["cogRightArrow"][0] -y $global:GUIELEMENTS["cogRightArrow"][1]
+            Start-Sleep -Milliseconds 250
+        }
+    }
+
+}
 
 function Cog-Farming {
     #Ask for Buffer
@@ -892,21 +990,22 @@ function Cog-Farming {
                     #else
                         #if Cog > Buffer -> Make note if it to skip (array of arrays or something)
                         #else -> delete cog
-    $bitmap = New-Object System.Drawing.Bitmap 264, 448
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-    $graphics.CopyFromScreen(65, 173, 0, 0, $bitmap.Size)
-    $bitmap.Save(".\ocr_image.png", [System.Drawing.Imaging.ImageFormat]::Png)
-    $graphics.Dispose()
-    $bitmap.Dispose()
 
-    $ocrOutput = python ".\ocr.py" ".\ocr_image.png" | ConvertFrom-Json
-
-    if($ocrOutput.error) {
-        Write-Host "OCR ERROR"
-    } else {
-        Write-Host $ocrOutput.digits
-    }
-
+    do {
+        Write-Host "Enter the buffer % you are desiring"
+        $cogBuffer = Read-Host
+        if ($cogBuffer -match '^\d+$') {
+            $choice = [int]$cogBuffer
+            do {
+                Write-Host "Starting Cog Script..."
+                Start-Sleep -Milliseconds 5000
+                Cog-Functionality $choice
+            } while($true)
+            break
+        } else {
+            Write-Host "Invalid input. Please enter a number." -ForegroundColor Red
+        }
+    } while($true)
 }
 
 #DEV CYCLE ##################################################################################################################

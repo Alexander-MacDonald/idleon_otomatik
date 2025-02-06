@@ -40,6 +40,8 @@ for idx, (x, y, w, h) in enumerate(subsections):
 
     cv2.imwrite(cog_filename, cog)
     results = easyocr.Reader(['en'], verbose=False).readtext(cog_filename, allowlist='0123456789', detail=1)
+    if(len(results) == 0):
+        detected_digits.append('0')
+    
     detected_digits.extend([text for _, text, _ in results])
-
 print(json.dumps({"digits": detected_digits}, ensure_ascii=False))
