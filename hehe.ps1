@@ -199,6 +199,7 @@ $global:GUIELEMENTS = @{
     "storage" = @(1111, 370)
     "construction" = @(1518, 558)
     "cogs" = @(308, 105)
+    "gaming" = @(1703, 538)
     "constructionEXP" = @(771, 72) #247 250 255
     "cogShelf" = @(682, 110) #230 165 107
     "ultimateCog" = @(606, 756)
@@ -909,6 +910,8 @@ function Cog-Functionality($buffer) {
     Start-Sleep -Milliseconds 250
     Click-Screen -x $global:GUIELEMENTS["codex"][0] -y $global:GUIELEMENTS["codex"][1]
     Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
+    Start-Sleep -Milliseconds 250
     Click-Screen -x $global:GUIELEMENTS["construction"][0] -y $global:GUIELEMENTS["construction"][1]
     Start-Sleep -Milliseconds 250
     Click-Screen -x $global:GUIELEMENTS["cogs"][0] -y $global:GUIELEMENTS["cogs"][1]
@@ -970,6 +973,12 @@ function Cog-Functionality($buffer) {
         }
     }
 
+    if($numTrue -gt 50) {
+        return $false
+    } else {
+        return $true
+    }
+
 }
 
 function Cog-Farming {
@@ -996,16 +1005,92 @@ function Cog-Farming {
         $cogBuffer = Read-Host
         if ($cogBuffer -match '^\d+$') {
             $choice = [int]$cogBuffer
+            $ret = $true
             do {
                 Write-Host "Starting Cog Script..."
                 Start-Sleep -Milliseconds 5000
-                Cog-Functionality $choice
-            } while($true)
+                $ret = Cog-Functionality $choice
+            } while($ret)
             break
         } else {
             Write-Host "Invalid input. Please enter a number." -ForegroundColor Red
         }
     } while($true)
+}
+
+function Post-Office {
+    Click-Screen -x 316 -y 170
+    Start-Sleep -Milliseconds 250
+    for($i = 0; $i -lt 5550; $i++) {
+        Click-Screen -x 158 -y 856
+        Start-Sleep -Milliseconds 150
+        Click-Screen -x 654 -y 776
+        Start-Sleep -Milliseconds 50
+        Click-Screen -x 654 -y 776
+        Start-Sleep -Milliseconds 150
+    }
+    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+}
+
+#CANDY TEST #################################################################################################################
+function Candy-Testing {
+    for($i = 0; $i -lt 10; $i++) {
+        Reset-Menus
+        Start-Sleep -Milliseconds 250
+        [System.Windows.Forms.SendKeys]::SendWait("{I}")
+        Click-Screen -x 1325 -y 470 -hold 300
+        Start-Sleep -Milliseconds 250
+        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        Start-Sleep -Milliseconds 250
+        Reset-Menus
+        Start-Sleep -Milliseconds 250
+        [System.Windows.Forms.SendKeys]::SendWait("{C}")
+        Start-Sleep -Milliseconds 250
+        Click-Screen -x 905 -y 378
+        Start-Sleep -Milliseconds 250
+        Click-Screen -x 1015 -y 228
+        Start-Sleep -Milliseconds 250
+        Click-Screen -x 885 -y 226
+        Start-Sleep -Milliseconds 250
+        Reset-Menus
+    }
+}
+
+#GAMING #########################################################################################################################
+function Harvest-All($speed) {
+    for ($i = 0; $i -lt 175; $i++) {
+        Click-Screen -x 1347 -y 76
+        Start-Sleep -Milliseconds $speed
+    }
+}
+
+function Clear-Screen {
+    for ($j = 0; $j -lt 14; $j++) {
+        for ($k = 0; $k -lt 8; $k++) {
+            if ((($j -eq 0) -or ($j -eq 1) -or ($j -eq 13)) -and ($k -eq 7)) {
+                continue
+            } else {
+                Click-Screen -x (($j*75) + 300) -y (($k*90) + 100)
+                Start-Sleep -Milliseconds 150
+                Click-Screen -x 222 -y 190
+                Start-Sleep -Milliseconds 6000
+            }
+        }
+    }
+}
+
+function Gaming {
+    Reset-Menus
+    Start-Sleep -Milliseconds 250
+    [System.Windows.Forms.SendKeys]::SendWait("{C}")
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:GUIELEMENTS["gaming"][0] -y $global:GUIELEMENTS["gaming"][1]
+    Start-Sleep -Milliseconds 250
+    Start-Sleep -Milliseconds 3000
+    for ($a = 0; $a -lt 100; $a++) {
+        Harvest-All(1000)
+        Clear-Screen
+    }
 }
 
 #DEV CYCLE ##################################################################################################################
@@ -1047,14 +1132,17 @@ function Process-MainMenu($choice) {
         4 {
             Show-SubMenu
         }
-        5 {
+        5{
+            Gaming
+        }
+        6 {
             Write-Host "This Function only implemented for gem farming W5 boss, more functionality soon TM"
             Gem-Farming
         }
-        7 {
+        8 {
             Cog-Farming
         }
-        8 {
+        9 {
             for($i = 0; $i -lt 20; $i++) {
                 Click-Screen -x 1175 -y 820
                 Start-Sleep -Milliseconds 50
@@ -1062,14 +1150,20 @@ function Process-MainMenu($choice) {
                 Start-Sleep -Milliseconds 50
             }
         }
-        10 {
+        11 {
             Reset-Menus
             Iterate-Shops
         }
-        12 {
+        13 {
+            Candy-Testing
+        }
+        14 {
+            Post-Office
+        }
+        15 {
             Dev
         }
-        13 {
+        16 {
             Reset-Screen
             Write-Host "Exiting the script. Goodbye!" -ForegroundColor Green
             Start-Sleep -Milliseconds 400
@@ -1110,7 +1204,8 @@ function MainLoop {
             "Change Character | Current Character: '$global:activeCharacter'",
             "Change World | Current World: '$global:activeWorld'",
             "Change Level | Current Level: '$global:activeLevelName'",
-            "Gaming",
+            "Sub Menu Test",
+            "Fast Gaming",
             "Boss Farming"
             "Bubo Farming",
             "Cog Farming",
@@ -1118,6 +1213,8 @@ function MainLoop {
             "Candying Bubbles",
             "Daily Claim (Buying Shops, etc)",
             "Two Minute Archer Claims"
+            "Candy Test"
+            "Post Office"
             "[Dev] Basic Farming"
             "Settings",
             "Exit"
