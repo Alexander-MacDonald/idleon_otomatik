@@ -1058,7 +1058,7 @@ function Candy-Testing {
 
 #GAMING #########################################################################################################################
 function Harvest-All($speed) {
-    for ($i = 0; $i -lt 175; $i++) {
+    for ($i = 0; $i -lt 80; $i++) {
         Click-Screen -x 1347 -y 76
         Start-Sleep -Milliseconds $speed
     }
@@ -1072,8 +1072,12 @@ function Clear-Screen {
             } else {
                 Click-Screen -x (($j*75) + 300) -y (($k*90) + 100)
                 Start-Sleep -Milliseconds 150
-                Click-Screen -x 222 -y 190
-                Start-Sleep -Milliseconds 6000
+                if(-not(Check-Pixel -x 143 -y 121 -r 46 -b 46 -g 46)) {
+                    Click-Screen -x 143 -y 121
+                    Click-Screen -x 1318 -y 765
+                    Start-Sleep -Milliseconds 6000
+                }
+                Click-Screen -x 143 -y 121
             }
         }
     }
@@ -1088,9 +1092,10 @@ function Gaming {
     Start-Sleep -Milliseconds 250
     Start-Sleep -Milliseconds 3000
     for ($a = 0; $a -lt 100; $a++) {
-        Harvest-All(1000)
+        Harvest-All(4000)
         Clear-Screen
     }
+    Start-Sleep -Milliseconds 10000
 }
 
 #DEV CYCLE ##################################################################################################################
@@ -1163,7 +1168,7 @@ function Process-MainMenu($choice) {
         15 {
             Dev
         }
-        16 {
+        17 {
             Reset-Screen
             Write-Host "Exiting the script. Goodbye!" -ForegroundColor Green
             Start-Sleep -Milliseconds 400
