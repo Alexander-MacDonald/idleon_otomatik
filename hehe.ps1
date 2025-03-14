@@ -207,6 +207,25 @@ $global:GUIELEMENTS = @{
     "cogRightArrow" = @(293, 623)
     "deleteCog" = @(1317, 107)
     "depositall" = @(228, 385)
+    "alchemy" = @(926, 560)
+}
+
+$global:BIRCHPATH = @{
+    1 = @(461, 658)
+    2 = @(1240, 679)
+    3 = @(786, 877)
+}
+
+$global:ALCHEMY = @{
+    "STRColumn" = @(274, 562)
+    "Roid_Ragin" = @(321, 551)
+    "Roid_Ragin_Upgrade" = @(990, 772)
+    "AGIColumn" = @(619, 473)
+    "Swift_Steppin" = @(675, 542)
+    "Swift_Steppin_Upgrade" = @(1340, 773)
+    "WISColumn" = @(968, 480)
+    "Stable_Jenius" = @(1020, 551)
+    "Stable_Jenius_Upgrade" = @(889, 773)
 }
 
 $global:WORLDS = @{
@@ -407,6 +426,19 @@ $global:COGS = @(
     @(283, 564)
 )
 
+$global:SKILL_LOCATIONS = @{
+    "LEFT_BAG" = @(1298, 214)
+    "BOTTOM_LEFT_INVENTORY" = @(1327, 769)
+    "OAK_TREE" = @(337, 369)
+    "OAK_TREE_IDLE" = @(432, 237)
+    "OAK_TREE_OFF" = @(216, 417)
+    "COPPER_ORE" = @(1171, 225)
+    "COPPER_ORE_IDLE" = @(1368, 56)
+    "COPPER_ORE_OFF" = @(1520, 230)
+    "BIRCH_IDLE" = @(796, 409)
+    "BIRCH_OFF" = @(937, 594)
+}
+
 #GLOBALS
 
 $global:activeCharacter = 0
@@ -494,6 +526,24 @@ function Click-Screen {
     Start-Sleep -Milliseconds $hold
     [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
 
+}
+
+function Horizontal-Click-Drag {
+    param(
+        [int]$x1,
+        [int]$x2,
+        [int]$y,
+        [int]$step
+    )
+    [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($global:GUIELEMENTS["menu"][0], $global:GUIELEMENTS["menu"][1])
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
+    Start-Sleep -Milliseconds 500
+    for($x = $x1; $x -lt $x2; $x += $step) {
+        [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
+        Start-Sleep -Milliseconds 1
+    }
+    [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
+    Start-Sleep -Milliseconds 50
 }
 
 function Click-Drag {
@@ -1056,6 +1106,213 @@ function Candy-Testing {
     }
 }
 
+function Handle-Candy-Choice($c) {
+    $NUMCANDY = 5
+    $NUMCLAIMS = 10
+    $NUMBUBBLECLICKS = 5
+
+    Reset-Menus
+    Start-Sleep -Milliseconds 250
+    [System.Windows.Forms.SendKeys]::SendWait("{M}")
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:WORLDS[1][0] -y $global:WORLDS[1][1] 
+    Start-Sleep -Milliseconds 250
+    Click-Screen -x $global:WORLDS[1][0] -y $global:WORLDS[1][1] 
+    Start-Sleep -Milliseconds 1500
+    Reset-Menus
+    Start-Sleep -Milliseconds 250
+
+    switch($c) {
+        1 {
+            #GET TO TREE
+            Click-Screen -x 1811 -y 748
+            Start-Sleep -Milliseconds 4250
+            Click-Screen -x $global:SKILL_LOCATIONS["OAK_TREE"][0] -y $global:SKILL_LOCATIONS["OAK_TREE"][1]
+            Start-Sleep -Milliseconds 4250
+            Click-Screen -x $global:SKILL_LOCATIONS["OAK_TREE_IDLE"][0] -y $global:SKILL_LOCATIONS["OAK_TREE_IDLE"][1]
+            Start-Sleep -Milliseconds 350
+            Click-Screen -x $global:SKILL_LOCATIONS["OAK_TREE_OFF"][0] -y $global:SKILL_LOCATIONS["OAK_TREE_OFF"][1]
+            Start-Sleep -Milliseconds 450
+            Reset-Menus
+
+            for($j = 0; $j -lt $NUMCANDY; $j++) {
+                [System.Windows.Forms.SendKeys]::SendWait("{I}")
+                Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
+                Start-Sleep -Milliseconds 250
+                [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                for($i = 0; $i -lt $NUMCLAIMS; $i++) {
+                    Horizontal-Click-Drag -x1 170 -x2 670 -y 404 -step 10 
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
+                    Start-Sleep -Milliseconds 350
+                    Click-Screen -x $global:GUIELEMENTS["depositall"][0] -y $global:GUIELEMENTS["depositall"][1]
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+                    Start-Sleep -Milliseconds 250
+                }
+                [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
+                Start-Sleep -Milliseconds 250
+                #get to bottom strength
+                [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($global:ALCHEMY["STRColumn"][0], $global:ALCHEMY["STRColumn"][1])
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:ALCHEMY["Roid_Ragin"][0] -y $global:ALCHEMY["Roid_Ragin"][1]
+                Start-Sleep -Milliseconds 250
+                for($k = 0; $k -lt $NUMBUBBLECLICKS; $k++) {
+                    Click-Screen -x $global:ALCHEMY["Roid_Ragin_Upgrade"][0] -y $global:ALCHEMY["Roid_Ragin_Upgrade"][1]
+                    Start-Sleep -Milliseconds 250
+                }
+                Reset-Menus
+                Start-Sleep -Milliseconds 3000
+            }
+        }
+        2 {
+            #GET TO COPPER
+            Click-Screen -x 117 -y 546
+            Start-Sleep -Milliseconds 4250
+            Click-Screen -x $global:SKILL_LOCATIONS["COPPER_ORE"][0] -y $global:SKILL_LOCATIONS["COPPER_ORE"][1]
+            Start-Sleep -Milliseconds 5250
+            Click-Screen -x $global:SKILL_LOCATIONS["COPPER_ORE_IDLE"][0] -y $global:SKILL_LOCATIONS["COPPER_ORE_IDLE"][1]
+            Start-Sleep -Milliseconds 350
+            Click-Screen -x $global:SKILL_LOCATIONS["COPPER_ORE_OFF"][0] -y $global:SKILL_LOCATIONS["COPPER_ORE_OFF"][1]
+            Start-Sleep -Milliseconds 450
+            Reset-Menus
+
+            for($j = 0; $j -lt $NUMCANDY; $j++) {
+                [System.Windows.Forms.SendKeys]::SendWait("{I}")
+                Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
+                Start-Sleep -Milliseconds 250
+                [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                for($i = 0; $i -lt $NUMCLAIMS; $i++) {
+                    Horizontal-Click-Drag -x1 310 -x2 1580 -y 230 -step 10 
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
+                    Start-Sleep -Milliseconds 350
+                    Click-Screen -x $global:GUIELEMENTS["depositall"][0] -y $global:GUIELEMENTS["depositall"][1]
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+                    Start-Sleep -Milliseconds 250
+                }
+                [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
+                Start-Sleep -Milliseconds 250
+                #get to bottom agi
+                [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($global:ALCHEMY["AGIColumn"][0], $global:ALCHEMY["AGIColumn"][1])
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:ALCHEMY["Swift_Steppin"][0] -y $global:ALCHEMY["Swift_Steppin"][1]
+                Start-Sleep -Milliseconds 250
+                for($k = 0; $k -lt $NUMBUBBLECLICKS; $k++) {
+                    Click-Screen -x $global:ALCHEMY["Swift_Steppin_Upgrade"][0] -y $global:ALCHEMY["Swift_Steppin_Upgrade"][1]
+                    Start-Sleep -Milliseconds 250
+                }
+                Reset-Menus
+                Start-Sleep -Milliseconds 3000
+            }
+        }
+        3 {
+            #GET TO BIRCH
+            [System.Windows.Forms.SendKeys]::SendWait("{M}")
+            Start-Sleep -Milliseconds 250
+            Click-Screen -x $global:WORLDS[1][0] -y $global:WORLDS[1][1]
+            Start-Sleep -Milliseconds 250
+            Click-Screen -x $global:WORLDONEMAP[4][0] -y $global:WORLDONEMAP[4][1]
+            Start-Sleep -Milliseconds 250
+            Click-Screen -x $global:WORLDONEMAP[4][0] -y $global:WORLDONEMAP[4][1]
+            Start-Sleep -Milliseconds 3250
+            Click-Screen -x $global:BIRCHPATH[1][0] -y $global:BIRCHPATH[1][1]
+            Start-Sleep -Milliseconds 2250
+            [System.Windows.Forms.SendKeys]::SendWait("{S}")
+            Start-Sleep -Milliseconds 3250
+            Click-Screen -x $global:BIRCHPATH[2][0] -y $global:BIRCHPATH[2][1]
+            Start-Sleep -Milliseconds 5250
+            Click-Screen -x $global:BIRCHPATH[3][0] -y $global:BIRCHPATH[3][1]
+            Start-Sleep -Milliseconds 4250
+            Click-Screen -x $global:SKILL_LOCATIONS["BIRCH_IDLE"][0] -y $global:SKILL_LOCATIONS["BIRCH_IDLE"][1]
+            Start-Sleep -Milliseconds 350
+            Click-Screen -x $global:SKILL_LOCATIONS["BIRCH_OFF"][0] -y $global:SKILL_LOCATIONS["BIRCH_OFF"][1]
+            Start-Sleep -Milliseconds 450
+            Reset-Menus
+
+            for($j = 0; $j -lt $NUMCANDY; $j++) {
+                [System.Windows.Forms.SendKeys]::SendWait("{I}")
+                Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
+                Start-Sleep -Milliseconds 250
+                [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                for($i = 0; $i -lt $NUMCLAIMS; $i++) {
+                    Horizontal-Click-Drag -x1 150 -x2 990 -y 583 -step 10 
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
+                    Start-Sleep -Milliseconds 350
+                    Click-Screen -x $global:GUIELEMENTS["depositall"][0] -y $global:GUIELEMENTS["depositall"][1]
+                    Start-Sleep -Milliseconds 250
+                    [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
+                    Start-Sleep -Milliseconds 250
+                }
+                [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
+                Start-Sleep -Milliseconds 250
+                #get to bottom wis
+                [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($global:ALCHEMY["WISColumn"][0], $global:ALCHEMY["WISColumn"][1])
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                [MouseController]::mouse_event([MouseController]::MOUSEEVENTF_WHEEL, 0, 0, -[MouseController]::WHEEL_DELTA, 0)
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:ALCHEMY["Stable_Jenius"][0] -y $global:ALCHEMY["Stable_Jenius"][1]
+                Start-Sleep -Milliseconds 250
+                for($k = 0; $k -lt $NUMBUBBLECLICKS; $k++) {
+                    Click-Screen -x $global:ALCHEMY["Stable_Jenius_Upgrade"][0] -y $global:ALCHEMY["Stable_Jenius_Upgrade"][1]
+                    Start-Sleep -Milliseconds 250
+                }
+                Reset-Menus
+                Start-Sleep -Milliseconds 3000
+            }
+        }
+        default {
+            Write-Host "How did you get here? :3"
+        }
+    }
+}
+
+function Candy-Stats {
+    $choice = Read-Host "Enter your choice (1: Strength, 2: Agility, 3: Wisdom)"
+    if (($choice -match '^\d+$') -and ([int]$choice -gt 0) -and ([int]$choice -lt 4)) {
+        $c = [int]$choice
+        Handle-Candy-Choice $c
+    } else {
+        Write-Host "Invalid input. Please enter a number." -ForegroundColor Red
+    }
+}
+
 #GAMING #########################################################################################################################
 function Harvest-All($speed) {
     for ($i = 0; $i -lt 80; $i++) {
@@ -1163,12 +1420,15 @@ function Process-MainMenu($choice) {
             Candy-Testing
         }
         14 {
-            Post-Office
+            Candy-Stats
         }
         15 {
+            Post-Office
+        }
+        16 {
             Dev
         }
-        17 {
+        18 {
             Reset-Screen
             Write-Host "Exiting the script. Goodbye!" -ForegroundColor Green
             Start-Sleep -Milliseconds 400
@@ -1219,6 +1479,7 @@ function MainLoop {
             "Daily Claim (Buying Shops, etc)",
             "Two Minute Archer Claims"
             "Candy Test"
+            "Candy AGI/STR/WIS"
             "Post Office"
             "[Dev] Basic Farming"
             "Settings",
