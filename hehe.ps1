@@ -1134,7 +1134,9 @@ function Handle-Candy-Choice($c) {
             Click-Screen -x $global:SKILL_LOCATIONS["OAK_TREE_OFF"][0] -y $global:SKILL_LOCATIONS["OAK_TREE_OFF"][1]
             Start-Sleep -Milliseconds 450
             Reset-Menus
-
+            Start-Sleep -Milliseconds 250
+            Horizontal-Click-Drag -x1 170 -x2 670 -y 404 -step 10 
+            Start-Sleep -Milliseconds 250
             for($j = 0; $j -lt $NUMCANDY; $j++) {
                 [System.Windows.Forms.SendKeys]::SendWait("{I}")
                 Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
@@ -1142,6 +1144,8 @@ function Handle-Candy-Choice($c) {
                 Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
                 Start-Sleep -Milliseconds 250
                 [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                Start-Sleep -Milliseconds 250
+
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 170 -x2 670 -y 404 -step 10 
                     Start-Sleep -Milliseconds 250
@@ -1192,7 +1196,9 @@ function Handle-Candy-Choice($c) {
             Click-Screen -x $global:SKILL_LOCATIONS["COPPER_ORE_OFF"][0] -y $global:SKILL_LOCATIONS["COPPER_ORE_OFF"][1]
             Start-Sleep -Milliseconds 450
             Reset-Menus
-
+            Start-Sleep -Milliseconds 250
+            Horizontal-Click-Drag -x1 310 -x2 1580 -y 230 -step 10 
+            Start-Sleep -Milliseconds 250
             for($j = 0; $j -lt $NUMCANDY; $j++) {
                 [System.Windows.Forms.SendKeys]::SendWait("{I}")
                 Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
@@ -1200,6 +1206,7 @@ function Handle-Candy-Choice($c) {
                 Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
                 Start-Sleep -Milliseconds 250
                 [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                Start-Sleep -Milliseconds 250
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 310 -x2 1580 -y 230 -step 10 
                     Start-Sleep -Milliseconds 250
@@ -1262,7 +1269,9 @@ function Handle-Candy-Choice($c) {
             Click-Screen -x $global:SKILL_LOCATIONS["BIRCH_OFF"][0] -y $global:SKILL_LOCATIONS["BIRCH_OFF"][1]
             Start-Sleep -Milliseconds 450
             Reset-Menus
-
+            Start-Sleep -Milliseconds 250
+            Horizontal-Click-Drag -x1 150 -x2 990 -y 583 -step 10 
+            Start-Sleep -Milliseconds 250
             for($j = 0; $j -lt $NUMCANDY; $j++) {
                 [System.Windows.Forms.SendKeys]::SendWait("{I}")
                 Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
@@ -1270,6 +1279,7 @@ function Handle-Candy-Choice($c) {
                 Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
                 Start-Sleep -Milliseconds 250
                 [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+                Start-Sleep -Milliseconds 250
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 150 -x2 990 -y 583 -step 10 
                     Start-Sleep -Milliseconds 250
