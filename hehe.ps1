@@ -1107,9 +1107,9 @@ function Candy-Testing {
 }
 
 function Handle-Candy-Choice($c) {
-    $NUMCANDY = 1
-    $NUMCLAIMS = 10
-    $NUMBUBBLECLICKS = 5
+    $NUMCANDY = 15
+    $NUMCLAIMS = 60
+    $NUMBUBBLECLICKS = 25
 
     Reset-Menus
     Start-Sleep -Milliseconds 250
@@ -1149,9 +1149,9 @@ function Handle-Candy-Choice($c) {
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 170 -x2 670 -y 404 -step 10 
                     Start-Sleep -Milliseconds 250
-                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                    Start-Sleep -Milliseconds 250
                     [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                     Start-Sleep -Milliseconds 250
                     Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
                     Start-Sleep -Milliseconds 350
@@ -1160,9 +1160,9 @@ function Handle-Candy-Choice($c) {
                     [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
                     Start-Sleep -Milliseconds 250
                 }
-                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                Start-Sleep -Milliseconds 250
                 [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                 Start-Sleep -Milliseconds 250
                 Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
                 Start-Sleep -Milliseconds 250
@@ -1210,9 +1210,10 @@ function Handle-Candy-Choice($c) {
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 310 -x2 1580 -y 230 -step 10 
                     Start-Sleep -Milliseconds 250
-                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                    Start-Sleep -Milliseconds 250
+                    
                     [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                     Start-Sleep -Milliseconds 250
                     Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
                     Start-Sleep -Milliseconds 350
@@ -1221,9 +1222,10 @@ function Handle-Candy-Choice($c) {
                     [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
                     Start-Sleep -Milliseconds 250
                 }
-                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                Start-Sleep -Milliseconds 250
+                
                 [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                 Start-Sleep -Milliseconds 250
                 Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
                 Start-Sleep -Milliseconds 250
@@ -1273,7 +1275,12 @@ function Handle-Candy-Choice($c) {
             Horizontal-Click-Drag -x1 150 -x2 990 -y 583 -step 10 
             Start-Sleep -Milliseconds 250
             for($j = 0; $j -lt $NUMCANDY; $j++) {
+                Click-Screen -x 1016 -y 978
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x 1150 -y 978
+                Start-Sleep -Milliseconds 250
                 [System.Windows.Forms.SendKeys]::SendWait("{I}")
+                Start-Sleep -Milliseconds 250
                 Click-Screen -x $global:SKILL_LOCATIONS["LEFT_BAG"][0] -y $global:SKILL_LOCATIONS["LEFT_BAG"][1]
                 Start-Sleep -Milliseconds 250
                 Click-Screen -x $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][0] -y $global:SKILL_LOCATIONS["BOTTOM_LEFT_INVENTORY"][1] -hold 300
@@ -1283,9 +1290,10 @@ function Handle-Candy-Choice($c) {
                 for($i = 0; $i -lt $NUMCLAIMS; $i++) {
                     Horizontal-Click-Drag -x1 150 -x2 990 -y 583 -step 10 
                     Start-Sleep -Milliseconds 250
-                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                    Start-Sleep -Milliseconds 250
+                    
                     [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                    Start-Sleep -Milliseconds 250
+                    Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                     Start-Sleep -Milliseconds 250
                     Click-Screen -x $global:GUIELEMENTS["storage"][0] -y $global:GUIELEMENTS["storage"][1]
                     Start-Sleep -Milliseconds 350
@@ -1294,9 +1302,10 @@ function Handle-Candy-Choice($c) {
                     [System.Windows.Forms.SendKeys]::SendWait("{ESC}")
                     Start-Sleep -Milliseconds 250
                 }
-                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
-                Start-Sleep -Milliseconds 250
+                
                 [System.Windows.Forms.SendKeys]::SendWait("{C}")
+                Start-Sleep -Milliseconds 250
+                Click-Screen -x $global:GUIELEMENTS["quickref"][0] -y $global:GUIELEMENTS["quickref"][1]
                 Start-Sleep -Milliseconds 250
                 Click-Screen -x $global:GUIELEMENTS["alchemy"][0] -y $global:GUIELEMENTS["alchemy"][1]
                 Start-Sleep -Milliseconds 250
